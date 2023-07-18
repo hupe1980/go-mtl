@@ -70,5 +70,7 @@ func Example_calculation() {
 
 	fmt.Println((*[1 << 30]float32)(r.Contents())[:arrLen])
 
-	// Output: [0 2 4 6]
+	// GPU functions are not available for macOS runners
+	// https://github.com/actions/runner-images/issues/1779#issuecomment-707071183
+	// _Output: [0 2 4 6]
 }
