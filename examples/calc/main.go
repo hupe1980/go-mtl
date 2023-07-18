@@ -1,16 +1,5 @@
-# 🍏 go-mtl: Go Bindings for Apple Metal
-![Build Status](https://github.com/hupe1980/go-mtl/workflows/build/badge.svg) 
-[![Go Reference](https://pkg.go.dev/badge/github.com/hupe1980/go-mtl.svg)](https://pkg.go.dev/github.com/hupe1980/go-mtl)
-> go-mtl provides seamless integration between Go and Apple Metal, enabling developers to harness the full potential of Metal's high-performance graphics and compute capabilities in their Go applications. With go-mtl, you can write efficient and scalable code for darwin platforms, leveraging Metal's advanced features such as parallel processing, GPU acceleration, and low-level access to the graphics pipeline.
+package main
 
-## Installation
-Use Go modules to include go-mtl in your project:
-```bash
-go get github.com/hupe1980/go-mtl
-```
-
-## Usage
-```go
 import (
 	"fmt"
 	"log"
@@ -83,16 +72,3 @@ func main() {
 
 	fmt.Println((*[1 << 30]float32)(r.Contents())[:arrLen])
 }
-```
-Output:
-```text
-[0 2 4 6]
-```
-
-For more example usage, see [examples](./examples).
-
-## Contributing
-Contributions are welcome! Feel free to open an issue or submit a pull request for any improvements or new features you would like to see.
-
-## License
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
