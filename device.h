@@ -21,7 +21,3 @@ struct Device CreateSystemDefaultDevice();
 struct Devices CopyAllDevices();
 
 bool   Device_SupportsFamily(void * device, uint16_t gpuFamily);
-void * Device_NewBufferWithLength(void * device, size_t length, uint16_t options);
-void * Device_NewBufferWithBytes(void * device, const void * bytes, size_t length, uint16_t options);
-
-void * Buffer_Contents(void * buffer);

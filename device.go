@@ -88,32 +88,3 @@ func (d Device) Device() unsafe.Pointer {
 func (d Device) SupportsFamily(gf GPUFamily) bool {
 	return bool(C.Device_SupportsFamily(d.device, C.uint16_t(gf)))
 }
-
-// Buffer is a memory allocation for storing unformatted data
-// that is accessible to the GPU.
-//
-// Reference: https://developer.apple.com/documentation/metal/mtlbuffer
-type Buffer struct {
-	buffer unsafe.Pointer
-}
-
-// Contents returns a pointer to the contents of the buffer.
-func (b *Buffer) Contents() unsafe.Pointer {
-	return C.Buffer_Contents(b.buffer)
-}
-
-// NewBufferWithLength creates a new buffer with the specified length.
-//
-// Reference: https://developer.apple.com/documentation/metal/mtldevice/1433375-newbufferwithlength
-func (d Device) NewBufferWithLength(length uintptr, opt ResourceOptions) Buffer {
-	b := C.Device_NewBufferWithLength(d.device, C.size_t(length), C.uint16_t(opt))
-	return Buffer{buffer: b}
-}
-
-// NewBufferWithBytes creates a new buffer of a given length and initializes its contents by copying existing data into it.
-//
-// Reference: https://developer.apple.com/documentation/metal/mtldevice/1433429-newbufferwithbytes
-func (d Device) NewBufferWithBytes(bytes unsafe.Pointer, length uintptr, opt ResourceOptions) Buffer {
-	b := C.Device_NewBufferWithBytes(d.device, bytes, C.size_t(length), C.uint16_t(opt))
-	return Buffer{buffer: b}
-}

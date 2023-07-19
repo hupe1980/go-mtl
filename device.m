@@ -45,18 +45,3 @@ struct Devices CopyAllDevices() {
 bool Device_SupportsFamily(void * device, uint16_t gpuFamily) {
     return [(id<MTLDevice>)device supportsFamily:gpuFamily];
 }
-
-void * Device_NewBufferWithLength(void * device, size_t length, uint16_t options) {
-	return [(id<MTLDevice>)device newBufferWithLength:(NSUInteger)length
-	                                         options:(MTLResourceOptions)options];
-}
-
-void * Device_NewBufferWithBytes(void * device, const void * bytes, size_t length, uint16_t options) {
-	return [(id<MTLDevice>)device newBufferWithBytes:(const void *)bytes
-	                                          length:(NSUInteger)length
-	                                         options:(MTLResourceOptions)options];
-}
-
-void * Buffer_Contents(void * buffer) {
-    return ((id<MTLBuffer>)buffer).contents;
-}
