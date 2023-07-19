@@ -1,9 +1,11 @@
 package mtl
 
 import (
-	"fmt"
-	"log"
+	"os"
+	"testing"
 	"unsafe"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const source = `#include <metal_stdlib>
@@ -21,30 +23,28 @@ result[index] = inA[index] + inB[index];
 }
 `
 
-func Example_calculation() {
+func TestCalculation(t *testing.T) {
+	if os.Getenv("GITHUB_ACTIONS") == "true" {
+		// GPU functions are not available for macOS runners
+		// https://github.com/actions/runner-images/issues/1779#issuecomment-707071183
+		t.Skip()
+	}
+
 	// Create a Metal device.
 	device, err := CreateSystemDefaultDevice()
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	// Create a Metal library from the provided source code.
 	lib, err := device.NewLibraryWithSource(source, CompileOptions{})
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	// Retrieve the Metal function named "add_arrays" from the library.
 	addArrays, err := lib.NewFunctionWithName("add_arrays")
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	// Create a Metal compute pipeline state with the function.
 	pipelineState, err := device.NewComputePipelineStateWithFunction(addArrays)
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	// Create a Metal command queue to submit commands for execution.
 	q := device.NewCommandQueue()
@@ -91,10 +91,5 @@ func Example_calculation() {
 	// Read the results from the output buffer
 	result := (*[1 << 30]float32)(r.Contents())[:arrLen]
 
-	// Print the results.
-	fmt.Println(result)
-
-	// GPU functions are not available for macOS runners
-	// https://github.com/actions/runner-images/issues/1779#issuecomment-707071183
-	// _Output: [0 2 4 6]
+	assert.ElementsMatch(t, []float32{0.0, 2.0, 4.0, 6.0}, result)
 }

@@ -75,53 +75,64 @@ const (
 	StorageModeMemoryless StorageMode = 3
 )
 
+// HazardTrackingMode represents the options for hazard tracking mode in Metal.
+type HazardTrackingMode uint8
+
+// Hazard tracking modes.
+const (
+	// HazardTrackingModeDefault specifies the default hazard tracking mode.
+	HazardTrackingModeDefault HazardTrackingMode = 0
+
+	// HazardTrackingModeUntracked specifies that hazards must be prevented manually when modifying object contents.
+	HazardTrackingModeUntracked HazardTrackingMode = 1
+
+	// HazardTrackingModeTracked specifies that Metal automatically prevents hazards when modifying object contents.
+	HazardTrackingModeTracked HazardTrackingMode = 2
+)
+
 const (
 	resourceCPUCacheModeShift       = 0
 	resourceStorageModeShift        = 4
 	resourceHazardTrackingModeShift = 8
 )
 
-// ResourceOptions defines optional arguments used to create
-// and influence behavior of buffer and texture objects.
+// ResourceOptions defines optional arguments used to set the behavior of a resource.
 //
-// Reference: https://developer.apple.com/documentation/metal/mtlresourceoptions.
+// Reference: https://developer.apple.com/documentation/metal/mtlresourceoptions
 type ResourceOptions uint16
 
 const (
-	// ResourceCPUCacheModeDefaultCache is the default CPU cache mode for the resource.
+	// ResourceCPUCacheModeDefaultCache specifies the default CPU cache mode for the resource.
 	// Guarantees that read and write operations are executed in the expected order.
 	ResourceCPUCacheModeDefaultCache ResourceOptions = ResourceOptions(CPUCacheModeDefaultCache) << resourceCPUCacheModeShift
 
-	// ResourceCPUCacheModeWriteCombined is a write-combined CPU cache mode for the resource.
-	// Optimized for resources that the CPU will write into, but never read.
+	// ResourceCPUCacheModeWriteCombined specifies a write-combined CPU cache mode that is optimized for resources
+	// that the CPU writes into, but never reads.
 	ResourceCPUCacheModeWriteCombined ResourceOptions = ResourceOptions(CPUCacheModeWriteCombined) << resourceCPUCacheModeShift
 
 	// ResourceStorageModeShared indicates that the resource is stored in system memory
-	// accessible to both the CPU and the GPU.
+	// and is accessible to both the CPU and the GPU.
 	ResourceStorageModeShared ResourceOptions = ResourceOptions(StorageModeShared) << resourceStorageModeShift
 
-	// ResourceStorageModeManaged indicates that the resource exists as a synchronized
-	// memory pair with one copy stored in system memory accessible to the CPU
-	// and another copy stored in video memory accessible to the GPU.
+	// ResourceStorageModeManaged indicates that the CPU and GPU may maintain separate copies of the resource,
+	// which need to be explicitly synchronized.
 	ResourceStorageModeManaged ResourceOptions = ResourceOptions(StorageModeManaged) << resourceStorageModeShift
 
-	// ResourceStorageModePrivate indicates that the resource is stored in memory
-	// only accessible to the GPU. In iOS and tvOS, the resource is stored
-	// in system memory. In macOS, the resource is stored in video memory.
+	// ResourceStorageModePrivate indicates that the resource can be accessed only by the GPU.
 	ResourceStorageModePrivate ResourceOptions = ResourceOptions(StorageModePrivate) << resourceStorageModeShift
 
-	// ResourceStorageModeMemoryless indicates that the resource is stored in on-tile memory,
-	// without CPU or GPU memory backing. The contents of the on-tile memory are undefined
-	// and do not persist; the only way to populate the resource is to render into it.
-	// Memoryless resources are limited to temporary render targets (i.e., Textures configured
-	// with a TextureDescriptor and used with a RenderPassAttachmentDescriptor).
+	// ResourceStorageModeMemoryless indicates that the resource's contents can be accessed only by the GPU
+	// and only exist temporarily during a render pass.
 	ResourceStorageModeMemoryless ResourceOptions = ResourceOptions(StorageModeMemoryless) << resourceStorageModeShift
 
-	// ResourceHazardTrackingModeUntracked indicates that the command encoder dependencies
-	// for this resource are tracked manually with Fence objects. This value is always set
-	// for resources sub-allocated from a Heap object and may optionally be specified for
-	// non-heap resources.
-	ResourceHazardTrackingModeUntracked ResourceOptions = 1 << resourceHazardTrackingModeShift
+	// ResourceHazardTrackingModeDefault specifies that the default hazard tracking mode should be used.
+	ResourceHazardTrackingModeDefault ResourceOptions = ResourceOptions(HazardTrackingModeDefault) << resourceHazardTrackingModeShift
+
+	// ResourceHazardTrackingModeTracked specifies that Metal prevents hazards when modifying this object's contents.
+	ResourceHazardTrackingModeTracked ResourceOptions = ResourceOptions(HazardTrackingModeTracked) << resourceHazardTrackingModeShift
+
+	// ResourceHazardTrackingModeUntracked specifies that the app must prevent hazards when modifying this object's contents.
+	ResourceHazardTrackingModeUntracked ResourceOptions = ResourceOptions(HazardTrackingModeUntracked) << resourceHazardTrackingModeShift
 )
 
 // Size represents the set of dimensions that declare the size of an object,
