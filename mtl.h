@@ -1,6 +1,7 @@
 // +build darwin
 
 #include "stddef.h"
+#include "stdbool.h"
 
 typedef unsigned long uint_t;
 typedef unsigned char uint8_t;

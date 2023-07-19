@@ -42,7 +42,7 @@ func main() {
 	}
 
 	// Create a Metal library from the provided source code.
-	lib, err := device.NewLibraryWithSource(source, mtl.CompileOptions{})
+	lib, err := device.NewLibraryWithSource(source)
 	if err != nil {
 		log.Fatal(err)
 	}

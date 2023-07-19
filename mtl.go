@@ -135,8 +135,42 @@ const (
 	ResourceHazardTrackingModeUntracked ResourceOptions = ResourceOptions(HazardTrackingModeUntracked) << resourceHazardTrackingModeShift
 )
 
+// LanguageVersion represents different versions of the Metal shading language.
+type LanguageVersion uint32
+
+const (
+	// LanguageVersion1_1 represents version 1.1 of the Metal shading language.
+	LanguageVersion1_1 LanguageVersion = (1 << 16) + 1
+
+	// LanguageVersion1_2 represents version 1.2 of the Metal shading language.
+	LanguageVersion1_2 LanguageVersion = (1 << 16) + 2
+
+	// LanguageVersion2_0 represents version 2.0 of the Metal shading language.
+	LanguageVersion2_0 LanguageVersion = (2 << 16)
+
+	// LanguageVersion2_1 represents version 2.1 of the Metal shading language.
+	LanguageVersion2_1 LanguageVersion = (2 << 16) + 1
+
+	// LanguageVersion2_2 represents version 2.1 of the Metal shading language.
+	LanguageVersion2_2 LanguageVersion = (2 << 16) + 2
+
+	// LanguageVersion2_3 represents version 2.1 of the Metal shading language.
+	LanguageVersion2_3 LanguageVersion = (2 << 16) + 3
+
+	// LanguageVersion2_4 represents version 2.1 of the Metal shading language.
+	LanguageVersion2_4 LanguageVersion = (2 << 16) + 4
+
+	// LanguageVersion3_0 represents version 2.1 of the Metal shading language.
+	LanguageVersion3_0 LanguageVersion = (3 << 16) + 0
+)
+
 // Size represents the set of dimensions that declare the size of an object,
 // such as an image, texture, threadgroup, or grid.
 //
 // Reference: https://developer.apple.com/documentation/metal/mtlsize.
 type Size struct{ Width, Height, Depth uint }
+
+// PTR returns a pointer to the given value.
+func PTR[T any](v T) *T {
+	return &v
+}

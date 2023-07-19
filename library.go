@@ -5,8 +5,8 @@ package mtl
 
 /*
 #include "library.h"
-struct Library Go_Device_NewLibraryWithSource(void * device, _GoString_ source) {
-	return Device_NewLibraryWithSource(device, _GoStringPtr(source), _GoStringLen(source));
+struct Library Go_Device_NewLibraryWithSource(void * device, _GoString_ source, struct CompileOptions opts) {
+	return Device_NewLibraryWithSource(device, _GoStringPtr(source), _GoStringLen(source), opts);
 }
 */
 import "C"
@@ -21,12 +21,19 @@ import (
 //
 // Reference: https://developer.apple.com/documentation/metal/mtlcompileoptions
 type CompileOptions struct {
-	// TODO.
+	// Indicates whether the compiler can perform optimizations for floating-point arithmetic that may violate the IEEE 754 standard.
+	FastMathEnabled bool
+
+	// Indicates whether the compiler should compile vertex shaders conservatively to generate consistent position calculations.
+	PreserveInvariance bool
+
+	// The language version used to interpret the library source code.
+	LanguageVersion LanguageVersion
 }
 
 // Library represents a collection of compiled graphics or compute functions.
 //
-// Reference: https://developer.apple.com/documentation/metal/mtllibrary.
+// Reference: https://developer.apple.com/documentation/metal/mtllibrary
 type Library struct {
 	library unsafe.Pointer
 }
@@ -35,8 +42,24 @@ type Library struct {
 // the functions stored in the specified source string.
 //
 // Reference: https://developer.apple.com/documentation/metal/mtldevice/1433431-newlibrarywithsource
-func (d Device) NewLibraryWithSource(source string, opt CompileOptions) (Library, error) {
-	l := C.Go_Device_NewLibraryWithSource(d.device, source) // TODO: opt.
+func (d Device) NewLibraryWithSource(source string, optFns ...func(*CompileOptions)) (Library, error) {
+	opts := CompileOptions{
+		FastMathEnabled:    true,
+		PreserveInvariance: false,
+		LanguageVersion:    LanguageVersion3_0,
+	}
+
+	for _, fn := range optFns {
+		fn(&opts)
+	}
+
+	co := C.struct_CompileOptions{
+		FastMathEnabled:    C.bool(opts.FastMathEnabled),
+		PreserveInvariance: C.bool(opts.PreserveInvariance),
+		LanguageVersion:    C.uint_t(opts.LanguageVersion),
+	}
+
+	l := C.Go_Device_NewLibraryWithSource(d.device, source, co) // TODO: opt.
 	if l.Library == nil {
 		return Library{}, errors.New(C.GoString(l.Error))
 	}

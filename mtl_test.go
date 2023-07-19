@@ -35,7 +35,7 @@ func TestCalculation(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Create a Metal library from the provided source code.
-	lib, err := device.NewLibraryWithSource(source, CompileOptions{})
+	lib, err := device.NewLibraryWithSource(source)
 	assert.NoError(t, err)
 
 	// Retrieve the Metal function named "add_arrays" from the library.
