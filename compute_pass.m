@@ -9,9 +9,14 @@ struct ComputePipelineState Device_NewComputePipelineStateWithFunction(void * de
 
     struct ComputePipelineState cps;
 	cps.ComputePipelineState = pipelineState;
+	
 	if (!pipelineState) {
 		cps.Error = error.localizedDescription.UTF8String;
+		
+		return cps;
 	}
+
+	cps.MaxTotalThreadsPerThreadgroup = pipelineState.maxTotalThreadsPerThreadgroup;
 
 	return cps;
 }

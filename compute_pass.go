@@ -16,7 +16,8 @@ import (
 //
 // Referece: https://developer.apple.com/documentation/metal/mtlcomputepipelinestate
 type ComputePipelineState struct {
-	computePipelineState unsafe.Pointer
+	computePipelineState          unsafe.Pointer
+	MaxTotalThreadsPerThreadgroup uint
 }
 
 // NewComputePipelineStateWithFunction creates a new ComputePipelineState object with the specified compute function.
@@ -30,5 +31,8 @@ func (d Device) NewComputePipelineStateWithFunction(f Function) (ComputePipeline
 		return ComputePipelineState{}, errors.New(C.GoString(cps.Error))
 	}
 
-	return ComputePipelineState{cps.ComputePipelineState}, nil
+	return ComputePipelineState{
+		computePipelineState:          cps.ComputePipelineState,
+		MaxTotalThreadsPerThreadgroup: uint(cps.MaxTotalThreadsPerThreadgroup),
+	}, nil
 }

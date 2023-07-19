@@ -89,8 +89,14 @@ func main() {
 	cce.SetBuffer(b2, 0, 1)
 	cce.SetBuffer(r, 0, 2)
 
+	// Specify threadgroup size
+	tgs := pipelineState.MaxTotalThreadsPerThreadgroup
+	if tgs > arrLen {
+		tgs = arrLen
+	}
+
 	// Dispatch compute threads to perform the calculation.
-	cce.DispatchThreads(mtl.Size{Width: arrLen, Height: 1, Depth: 1}, mtl.Size{Width: 4, Height: 1, Depth: 1})
+	cce.DispatchThreads(mtl.Size{Width: arrLen, Height: 1, Depth: 1}, mtl.Size{Width: tgs, Height: 1, Depth: 1})
 
 	// End encoding the compute command.
 	cce.EndEncoding()
